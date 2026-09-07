@@ -50,6 +50,7 @@ class TSMNet(DomainAdaptFineTuneableModel, FineTuneableModel, PatternInterpretab
             self.tsbnorm = bn.AdaMomBatchNorm((1, tsdim), batchdim=0, dispersion=self.bnorm_dispersion_, 
                                         eta=1., eta_test=.1, dtype=torch.double, device=self.spd_device_).to(self.device_)
         elif self.bnorm_ == 'spddsbn':
+            # subspacedims=20的话，那么输入到SPDDSMBN里的数据就是经过reeig稳定后的20*20的spd
             self.spddsbnorm = bn.AdaMomDomainSPDBatchNorm((1,subspacedims,subspacedims), batchdim=0, 
                                 domains=self.domains_,
                                 learn_mean=False,learn_std=True, 

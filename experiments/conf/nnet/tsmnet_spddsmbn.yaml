@@ -1,3 +1,4 @@
+# 实际上SPDDSMBN就是SPDDSBN+Momentum
 defaults:
     - tsmnet
     - _self_
@@ -10,7 +11,7 @@ scheduler:
     epochs: ${sub:${fit.epochs},10}
     bs: ${rdiv:${fit.batch_size_train},${fit.domains_per_batch}}
     bs0: ${fit.batch_size_train}
-    tau0: 0.85
+    tau0: 0.85  # 用于控制running statistics 更新的 momentum
 
 optimizer:
     param_groups:

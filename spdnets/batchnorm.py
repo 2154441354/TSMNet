@@ -542,7 +542,7 @@ class AdaMomSPDBatchNorm(SPDBatchNormImpl,SchedulableBatchNorm):
 class DomainSPDBatchNormImpl(BaseDomainBatchNorm):
     """
     Domain-specific batch normalization on the SPD manifold [proposed]
-
+    （每个域拥有自己的 running statistics，但归一化后的目标参数在所有域之间共享。）
     Keeps running stats for each domain. Scaling and bias parameters are shared across domains.
     """
 

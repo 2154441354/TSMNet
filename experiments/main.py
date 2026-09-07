@@ -104,6 +104,7 @@ def main(cfg : DictConfig):
                     on_train=True,
                     name='score_trn')
 
+    # inter-session就是患者内部每一个样本的spd都是一个域；inter-subject是指跨患者，每个患者spd作为一个域
     if 'inter-session' in cfg.evaluation.strategy:
         subset_iter = iter([[s] for s in dataset.subject_list])
         groupvarname = 'session'

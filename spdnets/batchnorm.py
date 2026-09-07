@@ -610,5 +610,10 @@ class AdaMomDomainSPDBatchNorm(SchedulableDomainBatchNorm,DomainSPDBatchNormImpl
     Keeps running stats for each domain. Scaling and bias parameters are shared across domains.
     The momentum terms can be controlled with a momentum scheduler.
     """
-
+    # 如果是跨患者的话就是：每个患者都有一个AdaMomSPDBatchNorm，过程如下：
+    # 假设有一个batch，样本1和样本3是患者1的，样本2和样本5是患者2的，样本4是患者3的；
+    # 接下来会根据患者1的样本1和样本3形成一个患者1的AdaMomSPDBatchNorm，并对该样本1和3进行BN处理；
+    # 其他患者的样本都是进行各自的BN操作，最后每个患者的G都是不一样的。
+    # 最终把这些样本按照顺序12345重新排列回去。
+    
     domain_bn_cls = AdaMomSPDBatchNorm

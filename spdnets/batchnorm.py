@@ -443,15 +443,17 @@ class SPDBatchNormImpl(BaseBatchNorm):
     def forward(self, X):
         manifold = self.running_mean.manifold
         if self.training:
-            # compute the Karcher flow for the current batch
+            # 先拿普通均值做 Karcher flow 初始点
             batch_mean = X.mean(dim=self.batchdim, keepdim=True)
+
+            # 做 Karcher flow ，也就是近似求当前 batch SPD 的黎曼均值，即在SPD流形几何下找中心
             for _ in range(self.karcher_steps):
                 bm_sq, bm_invsq = functionals.sym_invsqrtm2.apply(batch_mean.detach())
                 XT = functionals.sym_logm.apply(bm_invsq @ X @ bm_invsq)
                 GT = XT.mean(dim=self.batchdim, keepdim=True)
                 batch_mean = bm_sq @ functionals.sym_expm.apply(GT) @ bm_sq
             
-            # update the running mean
+            # 更新每个患者的 running mean
             rm = functionals.spd_2point_interpolation(self.running_mean, batch_mean, self.eta)
 
             if self.dispersion is BatchNormDispersion.SCALAR:
